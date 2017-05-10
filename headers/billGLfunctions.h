@@ -3,14 +3,22 @@
 
 #include <cmath>
 #include <iostream>
-#include "billvector.h"
+#include <billvector.h>
+
+#if defined(__APPLE__) && defined(__MACH__)
+
+#include <GLUT/glut.h>
+
+#else
+
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include <GL/glut.h>
 
+#endif
 
-namespace bill{
-namespace GLaux{
+namespace bill {
+namespace GLaux {
 
 extern float colorR;
 extern float colorB;
@@ -39,19 +47,29 @@ extern int mouseTolerance;
 void computePos();
 
 // drawing functions
-void drawBall(bill::vector position, bill::vector color=bill::vector({1.0,0.0,0.0}), float radius=0.1, float alpha=1.);
-void drawVector(bill::vector vec, bill::vector position=bill::vector({0.0,0.0,0.0}), bill::vector color=bill::vector({1.0,1.0,1.0}));
+void drawBall(bill::vector position, bill::vector color = bill::vector({1.0, 0.0, 0.0}), float radius = 0.1,
+              float alpha = 1.);
+
+void drawVector(bill::vector vec, bill::vector position = bill::vector({0.0, 0.0, 0.0}),
+                bill::vector color = bill::vector({1.0, 1.0, 1.0}));
+
 void drawSnowMan();
 
 void processNormalKeys(unsigned char key, int x, int y);
+
 void processNormalKeysUp(unsigned char key, int x, int y);
+
 void pressKey(int key, int xx, int yy);
+
 void releaseKey(int key, int x, int y);
-double FDdistribution(double e,double mu,double beta);
+
+double FDdistribution(double e, double mu, double beta);
+
 void mouseMove(int x, int y);
+
 void mouseButton(int button, int state, int x, int y);
 
 
-} //end of namespace GLaux
+    } //end of namespace GLaux
 } //end of namespace bill
 #endif

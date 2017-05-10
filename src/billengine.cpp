@@ -6,7 +6,7 @@ bill::BillEngine::BillEngine(){
   set=NULL;
 }
 
-bill::BillEngine::BillEngine(BillSetOfPoints& set){ 
+bill::BillEngine::BillEngine(BillSetOfPoints& set){
   starttime=glutGet(GLUT_ELAPSED_TIME);
   now=starttime;
   this->set = &set;
@@ -16,7 +16,7 @@ bill::BillEngine::BillEngine(BillSetOfPoints& set){
 void bill::BillEngine::step(){
   if(set!=NULL){
     now=glutGet(GLUT_ELAPSED_TIME);
-    if((now-starttime)>20){
+    if((now-starttime)>5){
       set->Go();
       starttime=now;
     }

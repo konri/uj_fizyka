@@ -113,12 +113,21 @@ bool bill::BillMaterialPoint::should_run(){
 }
 //*************************************************************************
 
+bill::Obstacle::~Obstacle() {
+
+}
+//*************************************************************************
+
 void bill::BillSetOfPoints::AddPoint(std::shared_ptr<BillMaterialPoint> p){
 	  points.push_back(p);
 }
 
 void bill::BillSetOfPoints::AddPoint(BillMaterialPoint* p){
 	  points.push_back(std::shared_ptr<BillMaterialPoint>(p));
+}
+
+void bill::BillSetOfPoints::AddObstacle(std::shared_ptr<Obstacle> o) {
+  obstacles.push_back(o);
 }
 
 std::shared_ptr<bill::BillMaterialPoint>  bill::BillSetOfPoints::operator[](size_t n){
@@ -128,6 +137,14 @@ std::shared_ptr<bill::BillMaterialPoint>  bill::BillSetOfPoints::operator[](size
   }
   else
     return points[n]; 
+}
+
+void bill::BillSetOfPoints::Act() {
+  for (auto &point : points) {
+    for (auto &obj : obstacles) {
+      obj->handleCollision(point);
+    }
+  }
 }
 
 void bill::BillSetOfPoints::Go(){
@@ -170,7 +187,12 @@ void bill::BillSetOfPoints::ResetToCenterMass(){
 
 void bill::BillSetOfPoints::Draw(){
   for(auto& point : points)
-    point->Draw();	
+    point->Draw();
+
+
+  for (auto &obj : obstacles) {
+    obj->draw();
+  }
 }
 
 bill::BillSetOfPoints::~BillSetOfPoints(){

@@ -1,4 +1,4 @@
-#include "../headers/billwindow.h"
+#include <billwindow.h>
 
 bill::Window::Window(int argc, char **argv) {
     window_position.x = 0;
@@ -83,7 +83,6 @@ void bill::Window::initiate() {
 
     // enter GLUT event processing cycle
     glutMainLoop();
-
 }
 
 void bill::Window::set_renderScene(void(*f)(void)) {
