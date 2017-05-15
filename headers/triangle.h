@@ -13,7 +13,7 @@ class Triangle : public bill::Obstacle {
 public:
     Triangle(const bill::vector &r1, const bill::vector &r2, const bill::vector &r3) :
             m_r1(r1), m_r2(r2), m_r3(r3),
-            m_attenuation(0.3) {
+            m_attenuation(0.5) {
 
         bill::vector a = r2 - r1;
         bill::vector b = r3 - r1;
@@ -35,10 +35,18 @@ public:
     }
 
     bool handleCollision(std::shared_ptr<bill::BillMaterialPoint> &mp) override {
+        if (bill::vector::norm(mp->velocity()) == 0.0) {
+            return false;
+        }
+
         bill::vector p = mp->position() - m_r1;
         const double signed_distance = m_normal_vector * p;
+        const double dot_product = m_normal_vector * mp->velocity();
+        std::cout << signed_distance << ", " << dot_product << std::endl;
 
-        if (signed_distance > 0.0) {
+        //return false;
+
+        if (fabs(signed_distance) > 0.005) {
             return false;
         }
 
@@ -47,27 +55,21 @@ public:
         p_n = m_normal_vector * signed_distance;
         point_proj = mp->position() - p_n;
 
-
         double alpha, beta, gamma;
         barycentric(point_proj, alpha, beta, gamma);
 
         if (is_inside_triangle(alpha, beta, gamma)) {
-//            std::cout << alpha << ", " << beta << ", " << gamma << std::endl;
-            bill::vector new_pos = mp->position() - 1.01 * signed_distance * m_normal_vector;
-            mp->set_future_position(new_pos);
+            mp->set_future_position(mp->position() + 1.01 * p_n);
 
             bill::vector v_n;
             bill::vector v_s;
-            const double dot_product = m_normal_vector * mp->velocity();
+
             v_n = m_normal_vector * dot_product;
             v_s = mp->v() - v_n;
 
             v_n = (1.0 - m_attenuation) * v_n;
             bill::vector new_velocity = v_s - v_n;
-            mp->set_velocity(new_velocity);
-
-            auto f = mp->Force();
-            mp->CalculateMove(f);
+            mp->set_future_velocity(new_velocity);
 
             return true;
         }
@@ -137,9 +139,9 @@ private:
     }
 
     bool is_inside_triangle(double alpha, double beta, double gamma) {
-        return (0.0 <= alpha && alpha <= 1.0 &&
-                0.0 <= beta && beta <= 1.0 &&
-                0.0 <= gamma && gamma <= 1.0 &&
+        return (0.0 < alpha && alpha <= 1.0 &&
+                0.0 < beta && beta <= 1.0 &&
+                0.0 < gamma && gamma <= 1.0 &&
                 alpha + beta + gamma <= 1.0);
     }
 };

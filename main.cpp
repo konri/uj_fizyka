@@ -14,6 +14,9 @@
 #include <Icosahedron.h>
 
 
+
+static const int N = 5;
+
 void renderScene(void);
 void mainLoop(void);
 
@@ -41,11 +44,10 @@ public:
         glPopMatrix();
 
 
-        const int n = 5;
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < n - 1; i++) {
-                bill::vector x0 = points[i + n * j]->position();
-                bill::vector xm = points[i + 1 + n * j]->position();
+        for (int j = 0; j < N; j++) {
+            for (int i = 0; i < N - 1; i++) {
+                bill::vector x0 = points[i + N * j]->position();
+                bill::vector xm = points[i + 1 + N * j]->position();
 
                 glPushMatrix();
                 glLineWidth(2.5);
@@ -58,10 +60,10 @@ public:
             }
         }
 
-        for (int j = 0; j < n - 1; j++) {
-            for (int i = 0; i < n; i++) {
-                bill::vector x0 = points[i + n * j]->position();
-                bill::vector xm = points[i + n * (j + 1)]->position();
+        for (int j = 0; j < N - 1; j++) {
+            for (int i = 0; i < N; i++) {
+                bill::vector x0 = points[i + N * j]->position();
+                bill::vector xm = points[i + N * (j + 1)]->position();
 
                 glPushMatrix();
                 glLineWidth(2.5);
@@ -79,61 +81,72 @@ public:
 
 bill::BillEngine engine;
 
+std::vector<std::shared_ptr<oscillator>> O;
+
+std::shared_ptr<oscillator> getO(size_t i, size_t j) {
+    if (i < 0 || j < 0 || i >= 5 || j >= 5) {
+        return nullptr;
+    } else {
+        return O[i + N * j];
+    }
+}
+
 int main(int argc, char **argv) {
     bill::GLaux::eye = bill::vector({-6.12583, 2.69013, -1.54564});
     bill::GLaux::center = bill::vector({0, 0, 0});
 
-    std::vector<std::shared_ptr<oscillator>> O;
-    const double step = 0.05; // integration step
+
+    const double step = 0.04; // integration step
 
     std::vector<std::shared_ptr<bill::Obstacle>> obstacles;
 
     obstacles.emplace_back(new Plane({0.0, 1.0, 0.0}, {0.0, 0.0, 0.0}));
     mesh.AddObstacle(obstacles.back());
 
-//    obstacles.emplace_back(new Triangle({-0.1, 0.5, -0.1},
-//                                        {8.0, 0.5, -0.1},
-//                                        {8.0, 0.5, 8.0}));
-//    mesh.AddObstacle(obstacles.back());
-
-
-    bill::vector icosahedronPosition = {1.5, 1, 1.5};
-    obstacles.emplace_back(new Icosahedron(icosahedronPosition, 0.5, true));
+    obstacles.emplace_back(new Triangle({-0.1, 0.5, -0.1},
+                                        {8.0, 0.5, -0.1},
+                                        {8.0, 0.5, 8.0}));
     mesh.AddObstacle(obstacles.back());
 
-    bill::vector green({0.55294118, 0.74117647, 0.04705882});
-    const double k = 120.;
+//    bill::vector icosahedronPosition = {0.7, 0.5, 0.75};
+//    obstacles.emplace_back(new Icosahedron(icosahedronPosition, 0.5, true));
+//    mesh.AddObstacle(obstacles.back());
 
-    const int N = 5;
+    bill::vector green({0.55294118, 0.74117647, 0.04705882});
+    const double k = 5.5;
+
+    const double y = 1.5;
+    const double l = 0.45;
+
     for (int j = 0; j < N; j++) {
         for (int i = 0; i < N; i++) {
             O.push_back(std::shared_ptr<oscillator>(
-                    new oscillator(bill::Verlet, k, 0.5, bill::vector({0.5 * i, 2.0, 0.5 * j}),
+                    new oscillator(bill::Euler, k, l,
+                                   bill::vector({l * i, y, l * j}),
                                    bill::vector({0.0, 0.0, 0.0}),
-                                   1.123, green, step)));
+                                   0.25, green, step)));
             mesh.AddPoint(O.back());
         }
     }
 
-    for (int j = 1; j < N - 1; j++) {
-        for (int i = 1; i < N - 1; i++) {
-            O[i + N * j]->set_left(O[i - 1 + N * j]);
-            O[i + N * j]->set_right(O[i + 1 + N * j]);
+    for (int j = 0; j < N; j++) {
+        for (int i = 0; i < N; i++) {
+            std::shared_ptr<oscillator> &o = O[i + N * j];
 
-            O[i + N * j]->set_bottom(O[i + N * (j - 1)]);
-            O[i + N * j]->set_top(O[i + N * (j + 1)]);
+            o->set_left(getO(i - 1, j));
+            o->set_right(getO(i + 1, j));
+
+            o->set_bottom(getO(i, j - 1));
+            o->set_top(getO(i, j + 1));
+
+            o->set_top_left(getO(i - 1, j + 1));
+            o->set_top_right(getO(i + 1,j + 1));
+
+            o->set_bottom_left(getO(i - 1, j - 1));
+            o->set_bottom_right(getO(i + 1, j - 1));
         }
     }
 
-    for (int j = 0; j < N; j++) {
-        O[0 + N * j]->set_right(O[1 + N * j]);
-        O[N - 1 + N * j]->set_left(O[N - 2 + N * j]);
-    }
-
-    for (int i = 0; i < N; i++) {
-        O[i + N * (N - 1)]->set_bottom(O[i + N * (N - 2)]);
-        O[i + N * 0]->set_top(O[i + N * 1]);
-    }
 
     engine = bill::BillEngine(mesh);
 

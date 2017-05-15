@@ -123,7 +123,6 @@ void bill::BillMaterialPoint::set_future_velocity(bill::vector new_v) {
 
 void bill::BillMaterialPoint::vp(bill::vector new_v) {
     std::get<1>(future) = new_v;
-    std::cout << std::get<1>(future) << std::endl;
 }
 
 void bill::BillMaterialPoint::disable() {

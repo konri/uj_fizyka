@@ -18,8 +18,12 @@ protected:
     std::shared_ptr<oscillator> right;
     std::shared_ptr<oscillator> top;
     std::shared_ptr<oscillator> bottom;
+    std::shared_ptr<oscillator> top_left;
+    std::shared_ptr<oscillator> top_right;
+    std::shared_ptr<oscillator> bottom_left;
+    std::shared_ptr<oscillator> bottom_right;
 
-    bill::vector spring_force(std::shared_ptr<oscillator> neighbor);
+    bill::vector spring_force(std::shared_ptr<oscillator> neighbor, double length);
 
 public:
     oscillator(bill::BillIntegrator algorithm, double k, double l,
@@ -33,6 +37,11 @@ public:
     void set_left(std::shared_ptr<oscillator> l);
     void set_bottom(std::shared_ptr<oscillator> point);
     void set_top(std::shared_ptr<oscillator> point);
+
+    void set_top_left(std::shared_ptr<oscillator> point);
+    void set_top_right(std::shared_ptr<oscillator> point);
+    void set_bottom_left(std::shared_ptr<oscillator> point);
+    void set_bottom_right(std::shared_ptr<oscillator> point);
 
     virtual bill::vector Force();
 }; //end of class oscillator

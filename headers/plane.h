@@ -15,7 +15,7 @@ class Plane : public bill::Obstacle {
 public:
     Plane(const bill::vector &normal, const bill::vector &position) :
             m_attenuation(0.6),
-            m_friction(0.3) {
+            m_friction(0.1) {
 
         point = position;
         const double length = bill::vector::norm(normal);
@@ -41,10 +41,7 @@ public:
             v_n = (1.0 - m_attenuation) * v_n;
             v_s = (1.0 - m_friction) * v_s;
             bill::vector new_velocity = v_s - v_n;
-            mp->set_velocity(new_velocity);
-
-            auto f = mp->Force();
-            mp->CalculateMove(f);
+            mp->set_future_velocity(new_velocity);
 
             return true;
         }

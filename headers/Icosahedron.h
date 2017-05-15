@@ -19,7 +19,7 @@ public:
 
     bool handleCollision(std::shared_ptr<bill::BillMaterialPoint> &mp) override {
         if (is_outside_sphere(mp)) {
-            return false;
+           // return false;
         }
 
         for (auto &face : m_faces) {
@@ -78,8 +78,6 @@ private:
                 m_radius = length;
             }
         }
-
-        std::cout << m_point << std::endl;
 
         for (size_t j = 0; j < N; j++) {
             v[j] = v[j] + m_point;
