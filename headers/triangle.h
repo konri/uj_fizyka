@@ -13,49 +13,45 @@ class Triangle : public bill::Obstacle {
 public:
     Triangle(const bill::vector &r1, const bill::vector &r2, const bill::vector &r3) :
             m_r1(r1), m_r2(r2), m_r3(r3),
-            m_attenuation(0.3) {
+            m_attenuation(0.5) {
 
-        bill::vector a = r2 - r1;
-        bill::vector b = r3 - r1;
+        const bill::vector a = r2 - r1;
+        const bill::vector b = r3 - r1;
+        // wektor normalny to po prostu iloczyn wektorowy a i b :-)
         m_normal_vector = b ^ a;
+
         m_area = 0.5 * bill::vector::norm(m_normal_vector);
         m_normal_vector.normalize();
 
         if (m_area <= 1e-6) {
-            throw std::runtime_error("Area equals zero");
+            throw std::runtime_error("Area equals zero, wrong triangle! ");
         }
 
-#ifdef DRAW_NORMAL
+//#ifdef DRAW_NORMAL
 //        m_normal_at_mid_point = m_normal_vector * 0.05;
 //        for (int i = 0; i < 3; i++) {
 //            m_mid_point[i] = (m_r1[i] + m_r2[i] + m_r3[i]) / 3.0;
 //        }
 //        m_normal_at_mid_point = m_normal_at_mid_point + m_mid_point;
-#endif
+//#endif
     }
 
     bool handleCollision(std::shared_ptr<bill::BillMaterialPoint> &mp) override {
-        bill::vector p = mp->position() - m_r1;
-        const double signed_distance = m_normal_vector * p;
+
+        bill::vector r = mp->position() - m_r1;
+        const double signed_distance = m_normal_vector * r;
 
         if (signed_distance > 0.0) {
             return false;
         }
 
-        bill::vector point_proj;
-        bill::vector p_n;
-        p_n = m_normal_vector * signed_distance;
-        point_proj = mp->position() - p_n;
-
+        const bill::vector p_n = m_normal_vector * signed_distance;
+        const bill::vector point_proj = mp->position() - p_n;
 
         double alpha, beta, gamma;
         barycentric(point_proj, alpha, beta, gamma);
 
         if (is_inside_triangle(alpha, beta, gamma)) {
-//            std::cout << alpha << ", " << beta << ", " << gamma << std::endl;
-            bill::vector new_pos = mp->position() - 1.01 * signed_distance * m_normal_vector;
-            mp->set_future_position(new_pos);
-
             bill::vector v_n;
             bill::vector v_s;
             const double dot_product = m_normal_vector * mp->velocity();
@@ -63,10 +59,22 @@ public:
             v_s = mp->v() - v_n;
 
             v_n = (1.0 - m_attenuation) * v_n;
-            bill::vector new_velocity = v_s - v_n;
+            const bill::vector new_velocity = v_s - v_n;
             mp->set_velocity(new_velocity);
 
             auto f = mp->Force();
+            const double signed_force = m_normal_vector * f;
+            if ( signed_force < 0) {
+                bill::vector f_n = m_normal_vector * f * m_normal_vector;
+                bill::vector f_s = f - f_n;
+
+//                u = 1 – zderzenie elastyczne
+//                u = 0 – zderzenie maksymalnie nieelastyczne
+                const double u = 0.3;
+                f_n = f_n - u * bill::vector::norm(f_s) * v_n / bill::vector::norm(v_n);
+                f = f_n + f_s;
+            }
+
             mp->CalculateMove(f);
 
             return true;
@@ -111,7 +119,6 @@ public:
     }
 
 
-
 private:
     bill::vector m_r1;
     bill::vector m_r2;
@@ -125,7 +132,7 @@ private:
     double area(const bill::vector &point, const bill::vector &r1, const bill::vector &r2) {
         bill::vector v1 = r1 - point;
         bill::vector v2 = r2 - point;
-        bill::vector v1_cross_v2 = v1 ^ v2;
+        bill::vector v1_cross_v2 = v1 ^v2;
 
         return 0.5 * bill::vector::norm(v1_cross_v2);
     }

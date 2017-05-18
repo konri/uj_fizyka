@@ -47,6 +47,9 @@ private:
         const size_t N = 12;
         const double t = (1.0 + ::sqrt(5.0)) / 2.0;
 
+        // rozwiazanie stworzenia dwudziescioscianu foremnego zaczerpniete ze strony:
+        // http://wiki.unity3d.com/index.php/ProceduralPrimitives#C.23_-_IcoSphere
+
         bill::vector v[N] = {
                 {t,  1,  0},
                 {-t, 1,  0},
@@ -67,6 +70,7 @@ private:
         for (size_t j = 0; j < N; j++) {
             v[j] = v[j] * m_scale / t;
 
+            // jeżeli chcemy regularny dodajemy nieznaczny krok w kazdej ze scian
             if (m_is_irregular) {
                 for (size_t i = 0; i < 3; i++) {
                     v[j][i] = v[j][i] + 0.05 * ((i + j) % 6);

@@ -17,6 +17,7 @@
 void renderScene(void);
 void mainLoop(void);
 
+static const int N = 15;
 
 class Mesh : public bill::BillSetOfPoints {
 protected:
@@ -41,11 +42,10 @@ public:
         glPopMatrix();
 
 
-        const int n = 5;
-        for (int j = 0; j < n; j++) {
-            for (int i = 0; i < n - 1; i++) {
-                bill::vector x0 = points[i + n * j]->position();
-                bill::vector xm = points[i + 1 + n * j]->position();
+        for (int j = 0; j < N; j++) {
+            for (int i = 0; i < N - 1; i++) {
+                bill::vector x0 = points[i + N * j]->position();
+                bill::vector xm = points[i + 1 + N * j]->position();
 
                 glPushMatrix();
                 glLineWidth(2.5);
@@ -58,10 +58,10 @@ public:
             }
         }
 
-        for (int j = 0; j < n - 1; j++) {
-            for (int i = 0; i < n; i++) {
-                bill::vector x0 = points[i + n * j]->position();
-                bill::vector xm = points[i + n * (j + 1)]->position();
+        for (int j = 0; j < N - 1; j++) {
+            for (int i = 0; i < N; i++) {
+                bill::vector x0 = points[i + N * j]->position();
+                bill::vector xm = points[i + N * (j + 1)]->position();
 
                 glPushMatrix();
                 glLineWidth(2.5);
@@ -79,11 +79,21 @@ public:
 
 bill::BillEngine engine;
 
+std::vector<std::shared_ptr<oscillator>> O;
+
+std::shared_ptr<oscillator> getPM(size_t i, size_t j) {
+    if (i < 0 || j < 0 || i >= N || j >= N) {
+        return nullptr;
+    } else {
+        return O[i + N * j];
+    }
+}
+
 int main(int argc, char **argv) {
     bill::GLaux::eye = bill::vector({-6.12583, 2.69013, -1.54564});
     bill::GLaux::center = bill::vector({0, 0, 0});
 
-    std::vector<std::shared_ptr<oscillator>> O;
+
     const double step = 0.05; // integration step
 
     std::vector<std::shared_ptr<bill::Obstacle>> obstacles;
@@ -96,43 +106,41 @@ int main(int argc, char **argv) {
 //                                        {8.0, 0.5, 8.0}));
 //    mesh.AddObstacle(obstacles.back());
 
-
-    bill::vector icosahedronPosition = {1.5, 1, 1.5};
+//
+    bill::vector icosahedronPosition = {2, 1, 3};
     obstacles.emplace_back(new Icosahedron(icosahedronPosition, 0.5, false));
     mesh.AddObstacle(obstacles.back());
 
     bill::vector green({0.55294118, 0.74117647, 0.04705882});
-    const double k = 120.;
+    const double k = 40.;
 
-    const int N = 5;
+    const double pm_distance = 0.25;
     for (int j = 0; j < N; j++) {
         for (int i = 0; i < N; i++) {
             O.push_back(std::shared_ptr<oscillator>(
-                    new oscillator(bill::Verlet, k, 0.5, bill::vector({0.5 * i, 2.0, 0.5 * j}),
+                    new oscillator(bill::Verlet, k, pm_distance, bill::vector({pm_distance * i, 2.0, pm_distance * j}),
                                    bill::vector({0.0, 0.0, 0.0}),
                                    1.123, green, step)));
             mesh.AddPoint(O.back());
         }
     }
 
-    for (int j = 1; j < N - 1; j++) {
-        for (int i = 1; i < N - 1; i++) {
-            O[i + N * j]->set_left(O[i - 1 + N * j]);
-            O[i + N * j]->set_right(O[i + 1 + N * j]);
-
-            O[i + N * j]->set_bottom(O[i + N * (j - 1)]);
-            O[i + N * j]->set_top(O[i + N * (j + 1)]);
-        }
-    }
-
     for (int j = 0; j < N; j++) {
-        O[0 + N * j]->set_right(O[1 + N * j]);
-        O[N - 1 + N * j]->set_left(O[N - 2 + N * j]);
-    }
+        for (int i = 0; i < N; i++) {
+            std::shared_ptr<oscillator> &currentPM = O[i + N * j];
 
-    for (int i = 0; i < N; i++) {
-        O[i + N * (N - 1)]->set_bottom(O[i + N * (N - 2)]);
-        O[i + N * 0]->set_top(O[i + N * 1]);
+            currentPM->set_left(getPM(i - 1, j));
+            currentPM->set_right(getPM(i + 1, j));
+
+            currentPM->set_bottom(getPM(i, j - 1));
+            currentPM->set_top(getPM(i, j + 1));
+
+            currentPM->set_top_left(getPM(i - 1, j + 1));
+            currentPM->set_top_right(getPM(i + 1,j + 1));
+
+            currentPM->set_bottom_left(getPM(i - 1, j - 1));
+            currentPM->set_bottom_right(getPM(i + 1, j - 1));
+        }
     }
 
     engine = bill::BillEngine(mesh);
