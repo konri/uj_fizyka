@@ -3,10 +3,11 @@
 
 #include <cmath>
 #include <iostream>
-#include <billvector.h>
-
+#include "billvector.h"
 #if defined(__APPLE__) && defined(__MACH__)
+
 #include <GLUT/glut.h>
+
 #else
 
 #include <GL/gl.h>
@@ -15,59 +16,51 @@
 
 #endif
 
-namespace bill {
-    namespace GLaux {
 
-        extern float colorR;
-        extern float colorB;
-        extern float colorG;
+namespace bill{
+namespace GLaux{
 
-        extern bill::vector eye;
-        extern bill::vector center;
-        extern bill::vector versor_up;
+extern float colorR;
+extern float colorB;
+extern float colorG;
+
+extern bill::vector eye;
+extern bill::vector center;
+extern bill::vector versor_up;
 
 // angle of rotation for the camera direction
-        extern float phi;
-        extern float theta;
+extern float phi;
+extern float theta;
 
-        extern int moveParallel, movePerpendicular;
-        extern int rotateParallel, rotatePerpendicular;
+extern int moveParallel, movePerpendicular;
+extern int rotateParallel, rotatePerpendicular;
 
-        extern double dPhi;
-        extern bill::quaternion q1;
-        extern bill::quaternion q2;
+extern double dPhi;
+extern bill::quaternion q1;
+extern bill::quaternion q2;
 
-        extern float dws, dad;
+extern float dws, dad;
 
-        extern bool IS_CLICKED;
-        extern int mouseTolerance;
+extern bool IS_CLICKED;
+extern int mouseTolerance;
 
-        void computePos();
+void computePos();
 
 // drawing functions
-        void drawBall(bill::vector position, bill::vector color = bill::vector({1.0, 0.0, 0.0}), float radius = 0.1,
-                      float alpha = 1.);
+void drawBall(bill::vector position, bill::vector color=bill::vector({1.0,0.0,0.0}), float radius=0.1, float alpha=1.);
+void drawBox(std::vector<bill::vector> vertecies, std::vector<bill::vector> colors=std::vector<bill::vector>(6,{1.0,0.0,0.0}), float alpha=1.); // convention vertices: start top left front anticlockwise then bottom anticlockwise; borders: top, bottom, left, right, front, back
+void drawVector(bill::vector vec, bill::vector position=bill::vector({0.0,0.0,0.0}), bill::vector color=bill::vector({1.0,1.0,1.0}));
+void drawSnowMan();
 
-        void drawVector(bill::vector vec, bill::vector position = bill::vector({0.0, 0.0, 0.0}),
-                        bill::vector color = bill::vector({1.0, 1.0, 1.0}));
-
-        void drawSnowMan();
-
-        void processNormalKeys(unsigned char key, int x, int y);
-
-        void processNormalKeysUp(unsigned char key, int x, int y);
-
-        void pressKey(int key, int xx, int yy);
-
-        void releaseKey(int key, int x, int y);
-
-        double FDdistribution(double e, double mu, double beta);
-
-        void mouseMove(int x, int y);
-
-        void mouseButton(int button, int state, int x, int y);
+void processNormalKeys(unsigned char key, int x, int y);
+void processNormalKeysUp(unsigned char key, int x, int y);
+void pressKey(int key, int xx, int yy);
+void releaseKey(int key, int x, int y);
+double FDdistribution(double e,double mu,double beta);
+void mouseMove(int x, int y);
+void mouseButton(int button, int state, int x, int y);
 
 
-    } //end of namespace GLaux
+} //end of namespace GLaux
 } //end of namespace bill
 #endif

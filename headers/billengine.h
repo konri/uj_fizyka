@@ -3,25 +3,22 @@
 
 #include <iostream>
 #include <cmath>
-#include <billmaterialpoint.h>
+#include "billmaterialpoint.h"
 
-namespace bill {
+namespace bill{
 
-    class BillEngine {
-    private:
-        BillSetOfPoints *set;
-        unsigned int starttime;
-        unsigned int now;
-        double timestep;
+class BillEngine{
+private:
+  BillSetOfPoints* set;
+  unsigned int starttime;
+  unsigned int now;
+  double timestep;
 
-    public:
+public:
 
-        BillEngine();
-
-        BillEngine(BillSetOfPoints &set);
-
-        void step();
-    }; //end of class BillEngine
-
+  BillEngine();
+  BillEngine(BillSetOfPoints& set);
+  void step();
+}; //end of class BillEngine
 } //end of namespace bill
 #endif

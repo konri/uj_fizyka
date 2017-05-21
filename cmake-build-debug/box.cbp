@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="box"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="/Users/konrad/Desktop/fizyka/box/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="rebuild_cache">
+				<Option working_dir="/Users/konrad/Desktop/fizyka/box/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="edit_cache">
+				<Option working_dir="/Users/konrad/Desktop/fizyka/box/cmake-build-debug"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="box">
+				<Option output="/Users/konrad/Desktop/fizyka/box/cmake-build-debug/box" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/konrad/Desktop/fizyka/box/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/konrad/Desktop/fizyka/box/headers"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 box"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+			<Target title="box/fast">
+				<Option output="/Users/konrad/Desktop/fizyka/box/cmake-build-debug/box" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/konrad/Desktop/fizyka/box/cmake-build-debug"/>
+				<Option object_output="./"/>
+				<Option type="1"/>
+				<Option compiler="gcc"/>
+				<Compiler>
+					<Add directory="/Users/konrad/Desktop/fizyka/box/headers"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../include/c++/v1"/>
+					<Add directory="/usr/local/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/clang/8.1.0/include"/>
+					<Add directory="/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include"/>
+					<Add directory="/usr/include"/>
+					<Add directory="/System/Library/Frameworks"/>
+					<Add directory="/Library/Frameworks"/>
+				</Compiler>
+				<MakeCommands>
+					<Build command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 box/fast"/>
+					<CompileFile command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j8 -f &quot;/Users/konrad/Desktop/fizyka/box/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/main.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/billGLfunctions.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/billRBengine.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/billengine.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/billmaterialpoint.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/billrigidbody.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/billwindow.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/box.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/src/oscillator.cpp">
+			<Option target="box"/>
+		</Unit>
+		<Unit filename="/Users/konrad/Desktop/fizyka/box/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>
