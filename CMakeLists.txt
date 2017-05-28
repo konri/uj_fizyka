@@ -12,7 +12,7 @@ set(SOURCE_FILES
         src/box.cpp
         src/billRBengine.cpp
         src/billrigidbody.cpp
-        main.cpp)
+        main.cpp headers/AABB.h)
 
 #mac
 find_package(OpenGL REQUIRED)
