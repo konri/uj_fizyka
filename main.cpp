@@ -50,13 +50,12 @@ public:
         for (unsigned int i = 0; i < bodiesAABB.size(); ++i) {
             bodiesAABB[i].calculateVectorsMinMax();
             for (unsigned int j = 0; j < i; ++j) {
-                if (!AABB::isCollision(bodiesAABB[i], bodiesAABB[j])) {
+                if (AABB::isCollision(bodiesAABB[i], bodiesAABB[j])) {
                     bodies[i]->disable();
                     bodies[j]->disable();
                 }
             }
-
-//            bodiesAABB[i].draw();
+            bodiesAABB[i].draw();
         }
 
     };

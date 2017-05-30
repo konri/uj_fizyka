@@ -6,6 +6,7 @@
 #define BOX_AABB_H
 
 #include "box.h"
+#include <limits>
 
 class AABB {
 protected:
@@ -13,38 +14,35 @@ protected:
     bill::vector vecMin;
     bill::vector vecMax;
     box *rigidBox;
-    std::vector<bill::vector> versAABB;
-    std::vector<bill::vector> colors;
+    bill::vector versAABB[8];
+//    std::vector<bill::vector> colors;
 
     void calculateVersAABB() {
-        versAABB.clear();
-
-        versAABB.push_back({vecMin[0], vecMax[1], vecMin[2]});
-        versAABB.push_back({vecMin[0], vecMax[1], vecMax[2]});
-        versAABB.push_back({vecMax[0], vecMax[1], vecMin[2]});
-        versAABB.push_back({vecMax[0], vecMax[1], vecMax[2]});
-
-        versAABB.push_back({vecMin[0], vecMin[1], vecMin[2]});
-        versAABB.push_back({vecMin[0], vecMin[1], vecMax[2]});
-        versAABB.push_back({vecMax[0], vecMin[1], vecMin[2]});
-        versAABB.push_back({vecMax[0], vecMin[1], vecMax[2]});
+        versAABB[0] = {vecMax[0], vecMax[1], vecMin[2]};
+        versAABB[1] = {vecMin[0], vecMax[1], vecMin[2]};
+        versAABB[2] = {vecMin[0], vecMin[1], vecMin[2]};
+        versAABB[3] = {vecMax[0], vecMin[1], vecMin[2]};
+        versAABB[4] = {vecMax[0], vecMin[1], vecMax[2]};
+        versAABB[5] = {vecMax[0], vecMax[1], vecMax[2]};
+        versAABB[6] = {vecMin[0], vecMax[1], vecMax[2]};
+        versAABB[7] = {vecMin[0], vecMin[1], vecMax[2]};
 
     }
 
 public:
     AABB(box *rigidBox) : rigidBox(rigidBox) {
-        colors.push_back(bill::vector({0.95686275, 0.34117647, 0.03921569}));
-        colors.push_back(bill::vector({0.95686275, 0.34117647, 0.03921569}));
-        colors.push_back(bill::vector({0.56470588, 0.6627451, 0.78039216}));
-        colors.push_back(bill::vector({0.56470588, 0.6627451, 0.78039216}));
-        colors.push_back(bill::vector({0.95294118, 0.75294118, 0.78431373}));
-        colors.push_back(bill::vector({0.95294118, 0.75294118, 0.78431373}));
 
     }
 
     void calculateVectorsMinMax() {
         std::vector<bill::vector> points;
         rigidBox->get_vertices(points);
+
+
+        for (int i = 0; i < dimension; i++) {
+            vecMin[i] = std::numeric_limits<double>::max();
+            vecMax[i] = std::numeric_limits<double>::min();
+        }
 
         for (bill::vector ver : points) {
             for (int i = 0; i < dimension; i++) {
@@ -57,33 +55,40 @@ public:
                 }
             }
         }
-
-        std::cout << "vecMax: " << vecMax << std::endl;
-        std::cout << "vecMin :" << vecMin << std::endl;
-
         calculateVersAABB();
     }
 
     void draw() {
 //        bill::GLaux::drawBox(versAABB, colors, 1.0);
-
         glLineWidth(1.1f);
         glColor3f(0.5f, 0.5f, 0.5f);
 
-        glBegin(GL_LINES);
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(versAABB[0][0], versAABB[0][1], versAABB[0][2]);
+        glVertex3f(versAABB[1][0], versAABB[1][1], versAABB[1][2]);
+        glVertex3f(versAABB[2][0], versAABB[2][1], versAABB[2][2]);
+        glVertex3f(versAABB[3][0], versAABB[3][1], versAABB[3][2]);
+        glEnd();
 
-        glVertex3d(versAABB[0][0], versAABB[0][1], versAABB[0][2]);
-        glVertex3d(versAABB[3][0], versAABB[3][1], versAABB[3][2]);
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(versAABB[4][0], versAABB[4][1], versAABB[4][2]);
+        glVertex3f(versAABB[5][0], versAABB[5][1], versAABB[5][2]);
+        glVertex3f(versAABB[6][0], versAABB[6][1], versAABB[6][2]);
+        glVertex3f(versAABB[7][0], versAABB[7][1], versAABB[7][2]);
+        glEnd();
 
-        glVertex3d(versAABB[3][0], versAABB[3][1], versAABB[3][2]);
-        glVertex3d(versAABB[7][0], versAABB[7][1], versAABB[7][2]);
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(versAABB[0][0], versAABB[0][1], versAABB[0][2]);
+        glVertex3f(versAABB[5][0], versAABB[5][1], versAABB[5][2]);
+        glVertex3f(versAABB[6][0], versAABB[6][1], versAABB[6][2]);
+        glVertex3f(versAABB[1][0], versAABB[1][1], versAABB[1][2]);
+        glEnd();
 
-        glVertex3d(versAABB[7][0], versAABB[7][1], versAABB[7][2]);
-        glVertex3d(versAABB[5][0], versAABB[5][1], versAABB[5][2]);
-
-        glVertex3d(versAABB[5][0], versAABB[5][1], versAABB[5][2]);
-        glVertex3d(versAABB[0][0], versAABB[0][1], versAABB[0][2]);
-
+        glBegin(GL_LINE_LOOP);
+        glVertex3f(versAABB[4][0], versAABB[4][1], versAABB[4][2]);
+        glVertex3f(versAABB[7][0], versAABB[7][1], versAABB[7][2]);
+        glVertex3f(versAABB[2][0], versAABB[2][1], versAABB[2][2]);
+        glVertex3f(versAABB[3][0], versAABB[3][1], versAABB[3][2]);
         glEnd();
 
     }
