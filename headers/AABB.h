@@ -15,7 +15,6 @@ protected:
     bill::vector vecMax;
     box *rigidBox;
     bill::vector versAABB[8];
-//    std::vector<bill::vector> colors;
 
     void calculateVersAABB() {
         versAABB[0] = {vecMax[0], vecMax[1], vecMin[2]};
@@ -26,40 +25,45 @@ protected:
         versAABB[5] = {vecMax[0], vecMax[1], vecMax[2]};
         versAABB[6] = {vecMin[0], vecMax[1], vecMax[2]};
         versAABB[7] = {vecMin[0], vecMin[1], vecMax[2]};
-
     }
 
 public:
     AABB(box *rigidBox) : rigidBox(rigidBox) {
+    }
 
+    void setDefaultValues(bill::vector &point) {
+        for (int i = 0; i < dimension; i++) {
+            vecMin[i] = vecMax[i] = point[i];
+        }
     }
 
     void calculateVectorsMinMax() {
         std::vector<bill::vector> points;
         rigidBox->get_vertices(points);
 
-
         for (int i = 0; i < dimension; i++) {
             vecMin[i] = std::numeric_limits<double>::max();
             vecMax[i] = std::numeric_limits<double>::min();
         }
 
-        for (bill::vector ver : points) {
+        setDefaultValues(points[0]);
+
+        for (int j = 1, len = points.size(); j < len; j++) {
+            bill::vector &verticeTmp = points[j];
             for (int i = 0; i < dimension; i++) {
-                if (ver[i] < vecMin[i]) {
-                    vecMin[i] = ver[i];
+                if (verticeTmp[i] < vecMin[i]) {
+                    vecMin[i] = verticeTmp[i];
                 }
 
-                if (ver[i] > vecMax[i]) {
-                    vecMax[i] = ver[i];
+                if (verticeTmp[i] > vecMax[i]) {
+                    vecMax[i] = verticeTmp[i];
                 }
             }
         }
         calculateVersAABB();
     }
 
-    void draw() {
-//        bill::GLaux::drawBox(versAABB, colors, 1.0);
+    void draw() const {
         glLineWidth(1.1f);
         glColor3f(0.5f, 0.5f, 0.5f);
 
@@ -100,7 +104,6 @@ public:
             if (box1.vecMax[i] < box2.vecMin[i])
                 return false;
         }
-
         return true;
     }
 };

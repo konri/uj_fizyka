@@ -55,12 +55,20 @@ public:
                     bodies[j]->disable();
                 }
             }
-            bodiesAABB[i].draw();
         }
-
     };
 
-} SetOfBodies;
+    void Draw() override {
+        for (const auto &body : bodies) {
+            body->Draw();
+        }
+
+        for (const auto &aabb : bodiesAABB) {
+            aabb.draw();
+        }
+    }
+
+}SetOfBodies;
 
 bill::BillRBEngine engine;
 
@@ -69,9 +77,10 @@ int main(int argc, char **argv) {
     bill::GLaux::eye = bill::vector({-1, 0, 0});
     bill::GLaux::center = bill::vector({0, 0, 0});
 
-    SetOfBodies.AddBody(new box(HollyWood, 0.1, 0.2, 0.3, bill::vector({0., 0.0, 0.3})));
-    SetOfBodies.AddBody(new box(HollyWood, 0.1, 0.1, 0.1, bill::vector({0., 0.0, -0.3}), bill::vector({0.0, 0.0, 0.02}),
+    SetOfBodies.AddBody(new box(HollyWood, 0.1, 0.2, 0.3, bill::vector({1., 0.0, 0.3})));
+    SetOfBodies.AddBody(new box(HollyWood, 0.1, 0.1, 0.1, bill::vector({1., 0.0, -0.3}), bill::vector({0.0, 0.0, 0.02}),
                                 bill::quaternion({0., 0., 1., 0.}), bill::vector({0.2, 0., 0.})));
+
     SetOfBodies.setAABBToRigids();
     engine = bill::BillRBEngine(SetOfBodies);
 
